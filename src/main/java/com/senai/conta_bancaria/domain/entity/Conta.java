@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo_conta", discriminatorType = DiscriminatorType.STRING, length = 20)
-@Table(name = "conta",
+@Table(name = "contaDTO",
         uniqueConstraints =  {
             @UniqueConstraint(name = "uk_conta_numero", columnNames = "numero"),
             @UniqueConstraint(name = "uk_cliente_tipo", columnNames = {"cliente_id", "tipo_conta"})
@@ -29,7 +29,7 @@ public abstract class Conta {
     private BigDecimal saldo;
 
     @Column(nullable = false)
-    private Boolean ativa;
+    private boolean ativa;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id",
