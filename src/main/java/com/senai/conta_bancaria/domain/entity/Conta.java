@@ -35,4 +35,7 @@ public abstract class Conta {
     @JoinColumn(name = "cliente_id",
             foreignKey = @ForeignKey(name = "fk_conta_cliente"))
     private Cliente cliente;
+
+    // Obriga quem herdar a implementar esse metodo e retornar uma string
+    public abstract String getTipo();
 }
