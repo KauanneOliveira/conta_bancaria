@@ -1,5 +1,6 @@
 package com.senai.conta_bancaria.interface_ui.controller;
 
+import com.senai.conta_bancaria.application.dto.ClienteAtualizadoDTO;
 import com.senai.conta_bancaria.application.dto.ClienteRegistroDTO;
 import com.senai.conta_bancaria.application.dto.ClienteResponseDTO;
 import com.senai.conta_bancaria.application.service.ClienteService;
@@ -15,9 +16,6 @@ import java.util.List;
 @RequestMapping("/api/cliente")
 @RequiredArgsConstructor
 public class ClienteController {
-
-    private final ClienteRepository repository;
-
     private final ClienteService service;
 
     @PostMapping
@@ -36,5 +34,17 @@ public class ClienteController {
     @GetMapping("/cpf/{cpf}")
     public ResponseEntity<ClienteResponseDTO> buscarClienteAtivoPorCpf(@PathVariable String cpf){
         return ResponseEntity.ok(service.bucarClienteAtivoPorCpf(cpf));
+    }
+
+    @PutMapping("/{cpf}")
+    public ResponseEntity<ClienteResponseDTO> atualizarCliente(@PathVariable String cpf,
+                                                               @RequestBody ClienteAtualizadoDTO dto) {
+        return ResponseEntity.ok(service.atualizarCliente(cpf, dto));
+    }
+
+    @DeleteMapping("/{cpf}")
+    public ResponseEntity<Void> deletarCliente(@PathVariable String cpf){
+        service.deletarCliente(cpf);
+        return ResponseEntity.noContent().build();
     }
 }
