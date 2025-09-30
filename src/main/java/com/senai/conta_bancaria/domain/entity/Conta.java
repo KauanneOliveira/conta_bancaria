@@ -38,4 +38,23 @@ public abstract class Conta {
 
     // Obriga quem herdar a implementar esse metodo e retornar uma string
     public abstract String getTipo();
+
+    public void sacar(BigDecimal valor) {
+        validarValorMaiorQueZero(valor);
+        if(valor.compareTo(saldo) > 0) {
+            throw new IllegalArgumentException("Saldo insuficiente para o saque");
+        }
+        saldo = saldo.subtract(valor);
+    }
+
+    public void depositar(BigDecimal valor) {
+        validarValorMaiorQueZero(valor);
+        saldo = saldo.add(valor);
+    }
+
+    private static void validarValorMaiorQueZero(BigDecimal valor) {
+        if(valor.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Valor de saque deve ser positivo");
+        }
+    }
 }
