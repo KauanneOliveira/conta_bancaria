@@ -1,5 +1,8 @@
 package com.senai.conta_bancaria.domain.entity;
 
+import com.senai.conta_bancaria.domain.exception.SaldoInsuficienteException;
+import com.senai.conta_bancaria.domain.exception.TransferirParaMesmaContaException;
+import com.senai.conta_bancaria.domain.exception.ValoresNegativosException;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,27 +43,27 @@ public abstract class Conta {
     public abstract String getTipo();
 
     public void sacar(BigDecimal valor) {
-        validarValorMaiorQueZero(valor);
+        validarValorMaiorQueZero(valor, "saque");
         if(valor.compareTo(saldo) > 0) {
-            throw new IllegalArgumentException("Saldo insuficiente para o saque");
+            throw new SaldoInsuficienteException("saque");
         }
         saldo = saldo.subtract(valor);
     }
 
     public void depositar(BigDecimal valor) {
-        validarValorMaiorQueZero(valor);
+        validarValorMaiorQueZero(valor, "deposito");
         saldo = saldo.add(valor);
     }
 
-    protected static void validarValorMaiorQueZero(BigDecimal valor) {
+    protected static void validarValorMaiorQueZero(BigDecimal valor,String operacao) {
         if(valor.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Valor de saque deve ser positivo");
+            throw new ValoresNegativosException(operacao);
         }
     }
 
-    public void transferir (BigDecimal valor, Conta contaDestino) {
+    public void transferir(BigDecimal valor, Conta contaDestino) {
         if(this.id.equals(contaDestino.getId())) {
-            throw new IllegalArgumentException("não é possivel transferir para a mesma conta");
+            throw new TransferirParaMesmaContaException();
         }
 
         this.sacar(valor);
