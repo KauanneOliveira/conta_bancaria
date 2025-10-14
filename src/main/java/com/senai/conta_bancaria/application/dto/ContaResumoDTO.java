@@ -5,12 +5,19 @@ import com.senai.conta_bancaria.domain.entity.Conta;
 import com.senai.conta_bancaria.domain.entity.ContaCorrente;
 import com.senai.conta_bancaria.domain.entity.ContaPoupanca;
 import com.senai.conta_bancaria.domain.exception.TipoDeContaInvalidaException;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
 public record ContaResumoDTO(
+        @NotBlank(message = "O número da conta é obrigatório")
         String numero,
+
+        @NotBlank(message = "O tipo da conta é obrigatório")
         String tipo,
+
+        @NotNull(message = "O saldo da conta é obrigatório")
         BigDecimal saldo
 ) {
     public Conta toEntity(Cliente cliente) {

@@ -36,11 +36,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleContaMesmoTipo (ContaDoMesmoTipoException ex) {
         return  new  ResponseEntity <>(ex.getMessage(), HttpStatus.CONFLICT);
     }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException (Exception ex) {
         return  new  ResponseEntity <>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail badRequest(MethodArgumentNotValidException ex, HttpServletRequest request) {
@@ -62,6 +62,7 @@ public class GlobalExceptionHandler {
         problem.setProperty("errors", errors);
         return problem;
     }
+
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ProblemDetail handleTypeMismatch(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
@@ -75,6 +76,7 @@ public class GlobalExceptionHandler {
         problem.setInstance(URI.create(request.getRequestURI()));
         return problem;
     }
+
     @ExceptionHandler(ConversionFailedException.class)
     public ProblemDetail handleConversionFailed(ConversionFailedException ex, HttpServletRequest request) {
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
