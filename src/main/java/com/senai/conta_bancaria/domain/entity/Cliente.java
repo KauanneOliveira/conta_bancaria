@@ -1,36 +1,26 @@
 package com.senai.conta_bancaria.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
-@Entity
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
-@Builder
+@AllArgsConstructor
+@SuperBuilder
+@Entity
 @Table(name = "cliente",
         uniqueConstraints = {
             @UniqueConstraint(columnNames = "cpf")
         })
-public class Cliente {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+public class Cliente extends Usuario{
 
-    @Column(nullable = false, length = 120)
-    private String nome;
-
-    @Column(nullable = false, length = 11)
-    private String cpf;
-
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name="cliente_contas", joinColumns=@JoinColumn(name="cliente_id"))
+    @Column(name="conta")
     private List<Conta> contas;
 
-    @Column(nullable = false)
-    private Boolean ativo;
 }
