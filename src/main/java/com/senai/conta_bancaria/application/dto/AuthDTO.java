@@ -6,7 +6,23 @@ public class AuthDTO {
             String email,
             String senha
     ) {}
+
     public record TokenResponse(
             String token
+    ) {}
+
+    public record AuthResponse(
+            String accessToken,
+            String refreshToken
+    ) {}
+
+    public record RefreshRequest(
+            String refreshToken
+    ) {}
+
+    public record UserResponse(
+            String nome,
+            String email,
+            String role
     ) {}
 }

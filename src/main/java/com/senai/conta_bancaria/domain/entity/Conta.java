@@ -39,6 +39,9 @@ public abstract class Conta {
             foreignKey = @ForeignKey(name = "fk_conta_cliente"))
     private Cliente cliente;
 
+    @Column(name = "tipo_conta", insertable = false, updatable = false)
+    private String tipoConta;
+
     // Obriga quem herdar a implementar esse metodo e retornar uma string
     public abstract String getTipo();
 

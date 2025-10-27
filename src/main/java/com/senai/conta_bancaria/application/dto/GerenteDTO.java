@@ -1,7 +1,7 @@
 package com.senai.conta_bancaria.application.dto;
 
 import com.senai.conta_bancaria.domain.entity.Gerente;
-import com.senai.conta_bancaria.enums.Role;
+import com.senai.conta_bancaria.domain.enums.Role;
 import lombok.Builder;
 
 @Builder

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -18,9 +19,8 @@ import java.util.List;
         })
 public class Cliente extends Usuario{
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name="cliente_contas", joinColumns=@JoinColumn(name="cliente_id"))
-    @Column(name="conta")
-    private List<Conta> contas;
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Conta> contas = new ArrayList<>();
 
 }
