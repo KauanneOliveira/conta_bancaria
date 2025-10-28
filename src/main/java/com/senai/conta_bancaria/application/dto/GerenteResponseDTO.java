@@ -1,10 +1,17 @@
 package com.senai.conta_bancaria.application.dto;
 
+import com.senai.conta_bancaria.domain.entity.Cliente;
+import com.senai.conta_bancaria.domain.entity.Gerente;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
+import java.util.List;
 
-public record ClienteAtualizadoDTO(
+public record GerenteResponseDTO(
+        @NotNull(message = "Id do cliente é obrigatório")
+        String id,
+
         @NotBlank(message = "O nome não pode estar vazio")
         @Pattern(regexp = "^[A-Za-zÀ-ÿ\\s]+$",
                 message = "O nome deve conter apenas letras")
@@ -29,4 +36,13 @@ public record ClienteAtualizadoDTO(
         String senha
 ) {
 
+    public static GerenteResponseDTO fromEntity(Gerente gerente) {
+        return new GerenteResponseDTO(
+                gerente.getId(),
+                gerente.getNome(),
+                gerente.getCpf(),
+                gerente.getEmail(),
+                gerente.getSenha()
+        );
+    }
 }

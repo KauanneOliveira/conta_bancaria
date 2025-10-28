@@ -7,6 +7,7 @@ import com.senai.conta_bancaria.application.service.ClienteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -18,6 +19,7 @@ import java.util.List;
 public class ClienteController {
     private final ClienteService service;
 
+    @PreAuthorize( "hasRole('GERENTE')")
     @PostMapping
     public ResponseEntity<ClienteResponseDTO> registrarCliente(@Valid @RequestBody ClienteRegistroDTO dto){
         ClienteResponseDTO novoCliente = service.registrarCliente(dto);
@@ -26,22 +28,26 @@ public class ClienteController {
                 .body(novoCliente);
     }
 
+    @PreAuthorize( "hasRole('GERENTE')")
     @GetMapping
     public ResponseEntity<List<ClienteResponseDTO>> listarClientesAtivos(){
         return ResponseEntity.ok(service.listarClientesAtivos());
     }
 
+    @PreAuthorize( "hasRole('GERENTE')")
     @GetMapping("/cpf/{cpf}")
     public ResponseEntity<ClienteResponseDTO> buscarClienteAtivoPorCpf(@PathVariable String cpf){
         return ResponseEntity.ok(service.bucarClienteAtivoPorCpf(cpf));
     }
 
+    @PreAuthorize( "hasRole('GERENTE')")
     @PutMapping("/{cpf}")
     public ResponseEntity<ClienteResponseDTO> atualizarCliente(@PathVariable String cpf,
                                                                @Valid @RequestBody ClienteAtualizadoDTO dto) {
         return ResponseEntity.ok(service.atualizarCliente(cpf, dto));
     }
 
+    @PreAuthorize( "hasRole('GERENTE')")
     @DeleteMapping("/{cpf}")
     public ResponseEntity<Void> deletarCliente(@PathVariable String cpf){
         service.deletarCliente(cpf);

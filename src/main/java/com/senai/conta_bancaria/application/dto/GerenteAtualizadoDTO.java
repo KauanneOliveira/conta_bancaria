@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 
-public record ClienteAtualizadoDTO(
+public record GerenteAtualizadoDTO(
         @NotBlank(message = "O nome não pode estar vazio")
         @Pattern(regexp = "^[A-Za-zÀ-ÿ\\s]+$",
                 message = "O nome deve conter apenas letras")

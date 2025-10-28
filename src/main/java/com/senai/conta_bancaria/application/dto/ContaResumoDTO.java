@@ -5,6 +5,7 @@ import com.senai.conta_bancaria.domain.entity.Conta;
 import com.senai.conta_bancaria.domain.entity.ContaCorrente;
 import com.senai.conta_bancaria.domain.entity.ContaPoupanca;
 import com.senai.conta_bancaria.domain.exception.TipoDeContaInvalidaException;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -18,6 +19,7 @@ public record ContaResumoDTO(
         String tipo,
 
         @NotNull(message = "O saldo da conta é obrigatório")
+        @DecimalMin(value = "0.00", message = "O saldo deve ser maior ou igual a zero")
         BigDecimal saldo
 ) {
     public Conta toEntity(Cliente cliente) {

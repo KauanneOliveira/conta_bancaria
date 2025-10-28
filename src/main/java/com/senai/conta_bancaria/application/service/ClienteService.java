@@ -4,10 +4,13 @@ import com.senai.conta_bancaria.application.dto.ClienteAtualizadoDTO;
 import com.senai.conta_bancaria.application.dto.ClienteRegistroDTO;
 import com.senai.conta_bancaria.application.dto.ClienteResponseDTO;
 import com.senai.conta_bancaria.domain.entity.Cliente;
+import com.senai.conta_bancaria.domain.enums.Role;
 import com.senai.conta_bancaria.domain.exception.ContaDoMesmoTipoException;
 import com.senai.conta_bancaria.domain.exception.EntidadeNaoEncontradaException;
 import com.senai.conta_bancaria.domain.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,12 +19,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ClienteService {
 
-    private final ClienteRepository repository;
+    private final ClienteRepository clienteRepository;
+    private final PasswordEncoder passwordEncoder;
 
+    @PreAuthorize("hasRole('ADMIN', 'GERENTE')")
     public ClienteResponseDTO registrarCliente(ClienteRegistroDTO dto) {
 
-        var cliente = repository.findByCpfAndAtivoTrue(dto.cpf())
-                .orElseGet(() -> repository.save(dto.toEntity()));
+        var cliente = clienteRepository
+                .findByCpfAndAtivoTrue(dto.cpf())
+                .orElseGet(
+                        () -> clienteRepository.save(dto.toEntity())
+                );
 
         var contas = cliente.getContas();
         var novaConta = dto.contaDTO().toEntity(cliente);
@@ -34,31 +42,41 @@ public class ClienteService {
 
         cliente.getContas().add(novaConta);
 
-        return ClienteResponseDTO.fromEntity(repository.save(cliente));
+        cliente.setSenha(passwordEncoder.encode(dto.senha()));
+        cliente.setRole(Role.CLIENTE);
+
+        return ClienteResponseDTO.fromEntity(clienteRepository.save(cliente));
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'GERENTE')")
     public List<ClienteResponseDTO> listarClientesAtivos() {
-        return repository.findAllByAtivoTrue()
+        return clienteRepository
+                .findAllByAtivoTrue()
                 .stream()
                 .map(ClienteResponseDTO::fromEntity)
                 .toList();
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'GERENTE')")
     public ClienteResponseDTO bucarClienteAtivoPorCpf(String cpf) {
         var cliente = buscarClientePorCpfEAtivo(cpf);
 
         return ClienteResponseDTO.fromEntity(cliente);
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'GERENTE')")
     public ClienteResponseDTO atualizarCliente(String cpf, ClienteAtualizadoDTO dto) {
         var cliente = buscarClientePorCpfEAtivo(cpf);
 
         cliente.setNome(dto.nome());
         cliente.setCpf(dto.cpf());
+        cliente.setEmail(dto.email());
+        cliente.setSenha(dto.senha());
 
-        return ClienteResponseDTO.fromEntity(repository.save(cliente));
+        return ClienteResponseDTO.fromEntity(clienteRepository.save(cliente));
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'GERENTE')")
     public void deletarCliente(String cpf) {
         var cliente = buscarClientePorCpfEAtivo(cpf);
 
@@ -67,11 +85,11 @@ public class ClienteService {
                 conta -> conta.setAtiva(false)
         );
 
-        repository.save(cliente);
+        clienteRepository.save(cliente);
     }
 
     private Cliente buscarClientePorCpfEAtivo(String cpf) {
-        var cliente = repository.findByCpfAndAtivoTrue(cpf)
+        var cliente = clienteRepository.findByCpfAndAtivoTrue(cpf)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("cliente"));
         return cliente;
     }
