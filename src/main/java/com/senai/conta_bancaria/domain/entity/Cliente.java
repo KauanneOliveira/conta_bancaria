@@ -7,12 +7,11 @@ import lombok.experimental.SuperBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@SuperBuilder
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 @Table(name = "cliente",
         uniqueConstraints = {
             @UniqueConstraint(columnNames = "cpf")
@@ -20,7 +19,6 @@ import java.util.List;
 public class Cliente extends Usuario{
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<Conta> contas = new ArrayList<>();
+    private List<Conta> contas;
 
 }
