@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-
+@Repository
 public interface CodigoAutenticacaoRepository extends JpaRepository<CodigoAutenticacao, String> {
     Optional<CodigoAutenticacao> findFirstByClienteIdAndValidadoFalseOrderByExpiraEmDesc(String clienteId);
 }

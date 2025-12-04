@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CodigoAutenticacaoService {
 
-    private final CodigoAutenticacaoRepository codigoAutenticacao;
+    private final CodigoAutenticacaoRepository codigoAutenticacaoRepository;
     private final ClienteRepository clienteRepository;
 
     public CodigoResponseDTO registrarCodigo(CodigoRegistroDTO dto){
@@ -30,7 +30,7 @@ public class CodigoAutenticacaoService {
                 .cliente(cliente)
                 .build();
 
-        return CodigoResponseDTO.fromEntity(codigoAutenticacao.save(codigoAutenticacao));
+        return CodigoResponseDTO.fromEntity(codigoAutenticacaoRepository.save(codigoAutenticacao));
     }
 
     // validar código
